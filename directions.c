@@ -2,31 +2,44 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 int main(){
-
-  DIR * d;
-  d = opendir("work9");
-  struct dirent *flop;
-  struct stat sb;
-  flop = readdir(d);
-  // printf("%p\n", flop);
-  stat("", &sb);
-
-  printf("Statistics for directory: work9\n");
-  printf("Total Directory size: %d bytes\n", size);
-  int size;
-  while(flop){
-    size += file.st_size;
+  DIR * d = opendir(".");
+  struct dirent* entry = readdir(d);
+  int total = 0;
+  while(entry){
+    if(entry -> d_type == DT_REG){
+      struct stat data;
+      stat(entry -> d_name, &data);
+      size_t size = data.st_size;
+      total += size;
+    }
+    entry = readdir(d);
   }
+  printf("\nTotal Size: %d Bytes\n", total);
+  closedir(d);
 
-
-  printf("Regular files:");
-  while(flop){
-    printf("\t%s\n", d_name);
+  printf("\nDirectories: \n");
+  d = opendir(".");
+  entry = readdir(d);
+  while(entry){
+    if(entry -> d_type == DT_DIR){
+      printf("\t%s\n", entry -> d_name);
+    }
+    entry = readdir(d);
   }
-  
-  d = closedir("work9");
+  closedir(d);
+  d = opendir(".");
+  entry = readdir(d);
+  printf("\nFiles: \n");
+  while(entry){
+    if(entry->d_type == DT_REG){
+      printf("\t%s\n", entry -> d_name);
+    }
+    entry = readdir(d);
+  }
+  closedir(d);
   return 0;
-
 }
