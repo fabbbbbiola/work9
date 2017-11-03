@@ -7,26 +7,27 @@
 
 int main(){
   DIR * d = opendir(".");
-  struct dirent* entry = readdir(d);
-  int total = 0;
+  struct dirent * entry = readdir(d);
+  int ts = 0;
+  int size = 0;
   while(entry){
-    if(entry -> d_type == DT_REG){
-      struct stat data;
-      stat(entry -> d_name, &data);
-      size_t size = data.st_size;
-      total += size;
+    if(entry->d_type == DT_REG){
+      struct stat sb;
+      stat(entry->d_name, &sb);
+      size = sb.st_size;
+      ts += size;
     }
     entry = readdir(d);
   }
-  printf("\nTotal Size: %d Bytes\n", total);
+  printf("\nTotal Size: %d bytes\n", ts);
   closedir(d);
 
   printf("\nDirectories: \n");
   d = opendir(".");
   entry = readdir(d);
   while(entry){
-    if(entry -> d_type == DT_DIR){
-      printf("\t%s\n", entry -> d_name);
+    if(entry->d_type == DT_DIR){
+      printf("\t%s\n", entry->d_name);
     }
     entry = readdir(d);
   }
@@ -36,7 +37,7 @@ int main(){
   printf("\nFiles: \n");
   while(entry){
     if(entry->d_type == DT_REG){
-      printf("\t%s\n", entry -> d_name);
+      printf("\t%s\n", entry->d_name);
     }
     entry = readdir(d);
   }
